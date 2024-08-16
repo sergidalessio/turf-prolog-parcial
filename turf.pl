@@ -38,6 +38,17 @@ jockey(lezcano, 149, 50).
 jockey(baratucci, 153, 55).
 jockey(falero, 157, 52).
 
+% También sabemos el Stud o la caballeriza al que representa cada jockey
+% Valdivieso y Falero son del stud El Tute
+% Lezcano representa a Las Hormigas
+% Y Baratucci y Leguisamo a El Charabón
+representa(valdivieso, elTute).
+representa(falero, elTute).
+representa(lezcano, lasHormigas).
+representa(baratucci, elCharabon).
+representa(leguisamo, elCharabon).
+%
+
 caballo(botafogo).
 caballo(old_man).
 caballo(energica).
@@ -57,14 +68,30 @@ gano(old_man, granPremioRepublica).
 gano(old_man, campeonatoPalermoOro).
 gano(mat_boy, granPremioCriadores).
 
-% Punto 2: 2 punto
-% No se llama Amor
-% 
-% Queremos saber quiénes son los caballos a los que no les gusta ningún jockey.
-% Ej: Yatasto y Enérgica según la base de conocimientos que dimos, no eligen a ningún jockey.
-ningunJockey(Caballo):-caballo(Caballo), not(prefiere(Caballo, _)).
+% Punto 2: 2 puntos
+% Para mí, para vos
+% Queremos saber quiénes son los caballos que prefieren a más de un jockey.
+% Ej: Botafogo, Old Man y Enérgica son ejemplos que cumplen esta condición según la base de conocimiento planteada.
+masDeUnJockey(Caballo):-
+  distinct(Caballo, (
+    prefiere(Caballo, Jockey1),
+    prefiere(Caballo, Jockey2),
+    Jockey1 \= Jockey2
+  )).
 
 % Punto 3: 2 puntos
+% No se llama Amor
+% Queremos saber quiénes son los caballos que no prefieren a ningún jockey de una caballeriza. El predicado debe ser inversible.
+% Ej: Botafogo aborrece a El Tute y Old Man aborrece a Las Hormigas, además de que Mat Boy aborrece a todos los studs.
+aborrece(Caballo, Stud):-
+  stud(Stud),
+  caballo(Caballo),
+  not((prefiere(Caballo, Jockey), representa(Jockey, Stud))).
+
+stud(Stud):-
+  distinct(Stud, representa(_, Stud)).
+
+% Punto 4: 2 puntos
 % Piolines
 % Queremos saber quiénes son les jockeys "piolines", que son las personas preferidas por todos los caballos que ganaron
 % un premio importante. El Gran Premio Nacional y el Gran Premio República son premios importantes.
@@ -77,7 +104,8 @@ gano_premio_importante(Caballo):-gano(Caballo, Premio), premio_importante(Premio
 
 casanova(Jockey):-jockey(Jockey, _, _), forall(gano_premio_importante(Caballo), prefiere(Caballo, Jockey)).
 
-% Punto 4: El jugador
+
+% Punto 5: El jugador
 % Apuestas (2 puntos)
 % Queremos registrar las apuestas que hacen ciertas personas, una persona puede apostar 
 % a ganador por un caballo => gana si el caballo resulta ganador
@@ -96,7 +124,44 @@ ganadora(imperfecta(Caballo1, Caballo2)):-salioPrimero(Caballo2, Resultado), sal
 salioPrimero(Caballo, [Caballo|_]).
 salioSegundo(Caballo, [_|[Caballo|_]]).
 
-% Punto 5 (2 puntos): Panorama
+% Punto 6: Los colores
+% Sabiendo que cada caballo tiene un color de crin:
+% - Botafogo es tordo (negro)
+% - Old Man es alazán (marrón)
+% - Enérgica es ratonero (gris y negro) 
+% - Mat Boy es palomino (marrón y blanco)
+% - Yatasto es pinto (blanco y marrón)
+% queremos saber qué caballos podría comprar una persona que tiene preferencia
+% por caballos de un color específico. Tiene que poder comprar por lo menos un caballo para que
+% la solución sea válida.
+%
+% Esperamos que no haya una única solución, sino que se pueda conocer todas las alternativas válidas posibles.
+crin(botafogo, tordo).
+crin(oldMan, alazan).
+crin(energica, ratonero).
+crin(matBoy, palomino).
+crin(yatasto, pinto).
+
+color(tordo, negro).
+color(alazan, marron).
+color(ratonero, gris).
+color(ratonero, negro).
+color(palomino, marron).
+color(palomino, blanco).
+color(pinto, blanco).
+color(pinto, marron).
+
+comprar(Color, Caballos):-
+  findall(Caballo, (crin(Caballo, Crin), color(Crin, Color)), CaballosPosibles),
+  combinar(CaballosPosibles, Caballos),
+  Caballos \= [].
+
+combinar([], []).
+combinar([Caballo|CaballosPosibles], [Caballo|Caballos]):-combinar(CaballosPosibles, Caballos).
+combinar([_|CaballosPosibles], Caballos):-combinar(CaballosPosibles, Caballos).
+
+% DESCARTADO
+% Punto 6 (2 puntos): Panorama
 % Dada una lista de caballos y una apuesta, queremos saber cuáles son los resultados posibles que hagan
 % que resulte ganadora esa apuesta. El predicado debe ser inversible para los resultados posibles y debe
 % considerar como opciones válidas únicamente si todos los caballos terminan la carrera.
@@ -109,10 +174,10 @@ salioSegundo(Caballo, [_|[Caballo|_]]).
 % Enérgica primera, Yatasto segunda, Old Man tercero
 % Enérgica primera, Old Man segunda, Yatasto tercero
 % Old Man primero, Enérgica segunda, Yatasto tercero
-panorama(Caballos, Apuesta, Resultado):-
-  permutation(Caballos, Resultado),
-  ganadora(Apuesta, Resultado),
-  length(Resultado, CantidadCaballos),
-  length(Caballos, CantidadCaballos).
+% panorama(Caballos, Apuesta, Resultado):-
+%   permutation(Caballos, Resultado),
+%   ganadora(Apuesta, Resultado),
+%   length(Resultado, CantidadCaballos),
+%   length(Caballos, CantidadCaballos).
 
-% quedan 10 puntos
+% quedan 12 puntos
