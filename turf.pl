@@ -59,7 +59,7 @@ prefiere(botafogo, Jockey):-jockey(Jockey, _, Peso), Peso < 52.
 prefiere(botafogo, baratucci).
 prefiere(old_man, Jockey):-jockey(Jockey, _, _), atom_length(Jockey, CantidadLetras), CantidadLetras > 7.
 prefiere(energica, Jockey):-jockey(Jockey, _, _), not(prefiere(botafogo, Jockey)).
-prefiere(yatasto, Jockey):-jockey(Jockey, Altura, _), Altura > 170.
+prefiere(mat_boy, Jockey):-jockey(Jockey, Altura, _), Altura > 170.
 % por universo cerrado no tiene sentido escribir una cláusula para Yatasto dado que lo que no está en la base de conocimientos se presume falso
 
 gano(botafogo, granPremioNacional).
@@ -102,7 +102,7 @@ premio_importante(granPremioRepublica).
 
 gano_premio_importante(Caballo):-gano(Caballo, Premio), premio_importante(Premio).
 
-casanova(Jockey):-jockey(Jockey, _, _), forall(gano_premio_importante(Caballo), prefiere(Caballo, Jockey)).
+piolin(Jockey):-jockey(Jockey, _, _), forall(gano_premio_importante(Caballo), prefiere(Caballo, Jockey)).
 
 
 % Punto 5: El jugador
@@ -117,9 +117,9 @@ casanova(Jockey):-jockey(Jockey, _, _), forall(gano_premio_importante(Caballo), 
 ganadora(ganador(Caballo), Resultado):-salioPrimero(Caballo, Resultado).
 ganadora(segundo(Caballo), Resultado):-salioPrimero(Caballo, Resultado).
 ganadora(segundo(Caballo), Resultado):-salioSegundo(Caballo, Resultado).
-ganadora(exacta(Caballo1, Caballo2)):-salioPrimero(Caballo1, Resultado), salioSegundo(Caballo2, Resultado).
-ganadora(imperfecta(Caballo1, Caballo2)):-salioPrimero(Caballo1, Resultado), salioSegundo(Caballo2, Resultado).
-ganadora(imperfecta(Caballo1, Caballo2)):-salioPrimero(Caballo2, Resultado), salioSegundo(Caballo1, Resultado).
+ganadora(exacta(Caballo1, Caballo2),Resultado):-salioPrimero(Caballo1, Resultado), salioSegundo(Caballo2, Resultado).
+ganadora(imperfecta(Caballo1, Caballo2),Resultado):-salioPrimero(Caballo1, Resultado), salioSegundo(Caballo2, Resultado).
+ganadora(imperfecta(Caballo1, Caballo2),Resultado):-salioPrimero(Caballo2, Resultado), salioSegundo(Caballo1, Resultado).
 
 salioPrimero(Caballo, [Caballo|_]).
 salioSegundo(Caballo, [_|[Caballo|_]]).
