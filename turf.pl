@@ -1,6 +1,6 @@
 
 % Punto 1: 2 puntos
-% Les jockeys son personas que monta el caballo en la carrera
+% Los jockeys son personas que monta el caballo en la carrera
 % Tenemos a
 % - Valdivieso, que mide 155 cms y pesa 52 kilos
 % - Leguisamo, que mide 161 cms y pesa 49 kilos
@@ -17,10 +17,10 @@
 % entre otros
 % 
 % Cada caballo tiene sus preferencias:
-% - a Botafogo le gusta que le jockey pese menos de 52 kilos o que sea Baratucci
-% - a Old Man le gusta que le jockey sea alguna persona de muchas letras (más de 7), existe el predicado atom_length/2
-% - a Enérgica le gustan todes les jockeys que no le gusten a Botafogo
-% - a Mat Boy le gusta les jockeys que midan mas de 170 cms
+% - a Botafogo le gusta que el jockey pese menos de 52 kilos o que sea Baratucci
+% - a Old Man le gusta que el jockey sea alguna persona de muchas letras (más de 7), existe el predicado atom_length/2
+% - a Enérgica le gustan todos los jockeys que no le gusten a Botafogo
+% - a Mat Boy le gustan los jockeys que midan mas de 170 cms
 % - a Yatasto no le gusta ningún jockey
 %
 % Por otra parte, sabemos que
