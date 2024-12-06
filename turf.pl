@@ -93,7 +93,7 @@ stud(Stud):-
 
 % Punto 4: 2 puntos
 % Piolines
-% Queremos saber quiénes son les jockeys "piolines", que son las personas preferidas por todos los caballos que ganaron
+% Queremos saber quiénes son los jockeys "piolines", que son las personas preferidas por todos los caballos que ganaron
 % un premio importante. El Gran Premio Nacional y el Gran Premio República son premios importantes.
 %
 % Por ejemplo, Leguisamo y Baratucci son piolines, no así Lezcano que es preferida por Botafogo pero no por Old Man.
